@@ -1,0 +1,76 @@
+---
+title: 'WLE 650: Lab 1'
+author: "Lizbeth G Amador"
+date: "2024-01-19"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Your Assignment
+
+In this lab, you will use the R CheatSheet and any online resources to:
+
+1.  create an RMarkdown file that will be knitted as a word document you turn in
+Please be sure to show all code and results in your knitted word document. Also, create sub-headings for tasks 2-5 above.  
+
+### 2.  
+Read in your multivariate data set.  
+
+```{r, data upload}
+#Setting directory
+root_dir = "G:/Shared drives/MultivariateStatistics"
+multivar_stud_data = "Data/StudentDataSets"
+
+#read in phenology data
+neonnpn = read.csv(file.path(root_dir, multivar_stud_data, "AmadorL_NeonNpn_OpenFLowers_conus.CSV"))
+#remove extra columns
+require(tidyverse, quietly = TRUE)
+phe = neonnpn %>%
+  select(-c("elevation_in_metersStat", "phenophase_status", "intensity_category_id", "intensity_value", "abundance_value", "elevation_in_meters", "first_yes_julian_date", "numdays_since_prior_no", "last_yes_julian_date", "numdays_until_next_no"))
+```
+
+### 3.  
+Use the **head** function to show the columns and first several rows of your dataset.  
+```{r}
+head(phe, 6)
+```
+
+### 4  
+Create a bulleted list describing the columns in your dataset and the type of variable that each column represents (e.g., ordinal, categorical, continuous, etc. per the lab lecture slides)  
+* `observation_id`: unique observation identifier, integer  
+* `update_datatime`: data (yyyy-MM-DD) and time (hh:mm:ss), character  
+* `site_id`: unique identifier of site, integer  
+* `genus`: organism's genus level, character  
+* `species`: organism's species level, character  
+* `common_name`: organism's common name, character  
+* `kingdom`: organism's kingdom level, character  
+* `individual_id`: unique identifier for each individual plant surveyed, integer  
+* `phenophase_id`: unique identifier of phenophase groups, integer  
+* `phenophase_description`: description of the phenophase, character  
+* `observation_date`: Date (yyyy-mm-dd) of when an observation was originally made, character  
+* `day_of_year`: converted observation data into a stadardised data measurement, integer  
+* `first_yes_year`: year of when phenophase was first oberserved, integer  
+* `first_yes_month`: Month of when phenophase was first oberserved, integer  
+* `first_yes_day`: Day of when phenophase was first oberserved, integer  
+* `first_yes_doy`: Day of year of when phenophase was first oberserved for a given site, integer  
+* `first_yes_sample_size`:  Sample size of individuals that first flowered at a given site, integer  
+* `mean_first_yes_doy`: Average day of year for first flowering individuals at a given site, integer  
+* `data_name`: Dataset origin (NEON or NPN), character  
+* `DomainID`: Unique identifier for NEON domains  
+* `longitude`: Decimal degree longitude for observation point, numerical  
+* `latitude`: Decimal degree latitude for observation point, numerical  
+
+### 5.  
+Create a plot of some of your data.  
+```{r}
+plot(phe$longitude, phe$latitude)
+
+phe %>%
+  ggplot() + geom_point(mapping = aes(x=longitude, y = latitude, color = data_name))
+```
+
+
+
