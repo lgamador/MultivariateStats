@@ -20,16 +20,16 @@ opts_chunk$set(echo = TRUE, tidy = TRUE)
 Note that for a RMarkdown document to knit, you need to comment out these 'install.packages' lines of code before knitting. This is because you cannot knit when your document needs to connect to an external web server. Right now these lines of code are commented out.
 
 ```{r eval=FALSE, warning=FALSE, message=FALSE}
-#install.packages("mvnormtest")
-#install.packages("MVN")
-#install.packages("MVA")
-#install.packages("psych")
-#install.packages("Hmisc")
-#install.packages("vegan")
-#install.packages("StatMatch")
-#install.packages("MASS")
-#install.packages("raster")
-#install.packages("cluster")
+# install.packages("mvnormtest")
+# install.packages("MVN")
+# install.packages("MVA")
+# install.packages("psych")
+# install.packages("Hmisc")
+# install.packages("vegan")
+# install.packages("StatMatch")
+# install.packages("MASS")
+# install.packages("raster")
+# install.packages("cluster")
 ```
 
 ```{r warning=FALSE, message=FALSE}
@@ -59,9 +59,7 @@ usAir<-USairpollution
 The modified `USairpollution` data set from your working directory is a csv file. Note you will need to modify you working directory if it is different.
 
 ```{r}
-usAir_mod<- read.csv("G:/Shared drives/MultivariateStatistics/Data/LabData/Lab1/usAir_mod.csv", row=1, header=TRUE)
-
-
+usAir_mod<- read.csv("G:/Shared drives/MultivariateStatistics/Data/LabData/Lab2/usAir_mod.csv", row=1, header=TRUE)
 ```
 
 \newline
@@ -80,7 +78,8 @@ First look at the summary statistics for `usAir`:
 describeBy(usAir)
 ```
 
-***Question 1: Do you see any unrealistic values? (5 pts) Note please answer all questions with points related to them.***
+***Question 1: Do you see any unrealistic values? (5 pts) Note please answer all questions with points related to them.***\ 
+The standard deviation values for `manu` and `popul` as they are much larger that the mean and median values, indicating some large spread. The range of values for these two also seem pretty extreme so that brings some suspicion. Wind values also seem to be pretty low but also given the context of the cities, Phoenix has the lowest wind value which makes sense since it is generally flat and there are not many tall buildings compared to Chicago with a much higher wind value.\  
 
 Now look at the summary statistics for `usAir_mod`:
 
