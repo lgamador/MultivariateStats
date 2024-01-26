@@ -215,40 +215,34 @@ Placing 1, 2 in parentheses after the `c` (which stands for concatenate) in the 
 
 Compare histograms for the raw data and the log transformed data for each variable.
 ```{r}
-par(mfrow=c(1,2))
+par(mfrow=c(2,4))
 #SO2
-hist(usAir$SO2)
-hist(usAirlog$SO2)
+hist(usAir$SO2, main = "raw SO2", xlab="")
+hist(usAirlog$SO2, main = "log SO2", xlab="")
 
-par(mfrow=c(1,2))
 #temp
-hist(usAir$temp)
-hist(usAirlog$temp)
+hist(usAir$temp, main = "raw temp", xlab="")
+hist(usAirlog$temp, main = "log temp", xlab="")
 
-par(mfrow=c(1,2))
 #manu
-hist(usAir$manu)
-hist(usAirlog$manu)
+hist(usAir$manu, main = "raw manu", xlab="")
+hist(usAirlog$manu, main = "log manu", xlab="")
 
-par(mfrow=c(1,2))
 #popul
-hist(usAir$popul)
-hist(usAirlog$popul)
+hist(usAir$popul, main = "raw popul", xlab="")
+hist(usAirlog$popul, main = "log popul", xlab="")
 
-par(mfrow=c(1,2))
 #wind
-hist(usAir$wind)
-hist(usAirlog$wind)
+hist(usAir$wind, main = "raw wind", xlab="")
+hist(usAirlog$wind, main = "log wind", xlab="")
 
-par(mfrow=c(1,2))
 #precip
-hist(usAir$precip)
-hist(usAirlog$precip)
+hist(usAir$precip, main = "raw precip", xlab="")
+hist(usAirlog$precip, main = "log precip", xlab="")
 
-par(mfrow=c(1,2))
 #predays
-hist(usAir$predays)
-hist(usAirlog$predays)
+hist(usAir$predays, main = "raw predays", xlab="")
+hist(usAirlog$predays, main = "log predays", xlab="")
 ```
 
 
@@ -285,40 +279,34 @@ hist(usAirsqrt[,1])
 
 Compare histograms for the raw data and the square root transformed data for each variable…
 ```{r}
-par(mfrow=c(1,2))
+par(mfrow=c(2,4))
 #SO2
-hist(usAir$SO2)
-hist(usAirsqrt$SO2)
+hist(usAir$SO2, main = "raw SO2", xlab="")
+hist(usAirsqrt$SO2, main = "sqrt SO2", xlab="")
 
-par(mfrow=c(1,2))
 #temp
-hist(usAir$temp)
-hist(usAirsqrt$temp)
+hist(usAir$temp, main = "raw temp", xlab="")
+hist(usAirsqrt$temp, main = "sqrt temp", xlab="")
 
-par(mfrow=c(1,2))
 #manu
-hist(usAir$manu)
-hist(usAirsqrt$manu)
+hist(usAir$manu, main = "raw manu", xlab="")
+hist(usAirsqrt$manu, main = "sqrt manu", xlab="")
 
-par(mfrow=c(1,2))
 #popul
-hist(usAir$popul)
-hist(usAirsqrt$popul)
+hist(usAir$popul, main = "raw popul", xlab="")
+hist(usAirsqrt$popul, main = "sqrt popul", xlab="")
 
-par(mfrow=c(1,2))
 #wind
-hist(usAir$wind)
-hist(usAirsqrt$wind)
+hist(usAir$wind, main = "raw wind", xlab="")
+hist(usAirsqrt$wind, main = "sqrt wind", xlab="")
 
-par(mfrow=c(1,2))
 #precip
-hist(usAir$precip)
-hist(usAirsqrt$precip)
+hist(usAir$precip, main = "raw precip", xlab="")
+hist(usAirsqrt$precip, main = "sqrt precip", xlab="")
 
-par(mfrow=c(1,2))
 #predays
-hist(usAir$predays)
-hist(usAirsqrt$predays)
+hist(usAir$predays, main = "raw predays", xlab="")
+hist(usAirsqrt$predays, main = "sqrt predays", xlab="")
 ```
 
 
@@ -400,46 +388,44 @@ hist(scaledData[,1] ,main=colnames(usAir)[1],xlab=" ")
 
 Compare the raw and standardized histograms for all of the variables.
 ```{r}
-par(mfrow=c(1,2))
+par(mfrow=c(2,4))
 #SO2
-hist(usAir$SO2)
-hist(scaledData[,1])
+hist(usAir$SO2, main = "raw SO2", xlab="")
+hist(scaledData[,1], main = "Standardized SO2", xlab="")
 
-par(mfrow=c(1,2))
 #temp
-hist(usAir$temp)
-hist(scaledData[,2])
+hist(usAir$temp, main = "raw temp", xlab="")
+hist(scaledData[,2], main = "standardized temp", xlab="")
 
-par(mfrow=c(1,2))
 #manu
-hist(usAir$manu)
-hist(scaledData[,3])
+hist(usAir$manu, main = "raw manu", xlab="")
+hist(scaledData[,3], main = "standardized manu", xlab="")
 
-par(mfrow=c(1,2))
 #popul
-hist(usAir$popul)
-hist(scaledData[,4])
+hist(usAir$popul, main = "raw popul", xlab="")
+hist(scaledData[,4], main = "standardized popul", xlab="")
 
-par(mfrow=c(1,2))
 #wind
-hist(usAir$wind)
-hist(scaledData[,5])
+hist(usAir$wind, main = "raw wind", xlab="")
+hist(scaledData[,5], main = "standardized wind", xlab="")
 
-par(mfrow=c(1,2))
 #precip
-hist(usAir$precip)
-hist(scaledData[,6])
+hist(usAir$precip, main = "raw precip", xlab="")
+hist(scaledData[,6], main = "standardized precip", xlab="")
 
-par(mfrow=c(1,2))
 #predays
-hist(usAir$predays)
-hist(scaledData[,7])
+hist(usAir$predays, main = "raw predays", xlab="")
+hist(scaledData[,7], main = "standardized predays", xlab="")
 ```
 
-***Question 4: Are you convinced that the variances are equalized? Just to check, calculate the mean and variance for each of the standardized variables. (10 pts)***
+***Question 4: Are you convinced that the variances are equalized? Just to check, calculate the mean and variance for each of the standardized variables. (10 pts)***  
+Based off of the calculations the standard deviations seem pretty equalized despite the apparent skewness of the histograms.
 ```{r}
-colMeans(scaledData)
-
+matmean = colMeans(scaledData) 
+matsd = c(sd(scaledData[1,]), sd(scaledData[2,]), sd(scaledData[3,]), sd(scaledData[4,]), sd(scaledData[5,]), sd(scaledData[6,]), sd(scaledData[7,]))
+scaledSprd = rbind(matmean, matsd)
+rownames(scaledSprd) <- c("mean", "sd")
+scaledSprd
 ```
 
 **Z standardization is very common in life sciences.**
@@ -513,12 +499,13 @@ apply(scaledData,2,out)
 ```
 
 **Question 5: Do you detect any outliers? For which variables? (5 pts)**
+Outliers were detected for the following: `SO2`, `temp`, `manu`, `popul`.\ 
 
 ## Multivariate outliers
 
 **we will come back to this...**
 
-# Distance and Dissimilarity
+# Distance and Dissimilarity - **LEFT OFF HERE**
 
 As we know from lecture, multivariate data with *p* variables are visually represented by a collection of points forming a data cloud in *p*-dimensional space. The shape, clumping, and dispersion of the data cloud contains information we seek to describe. Several distance and dissimilarity measures are used to calculate the distance between data points.
 
