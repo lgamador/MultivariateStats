@@ -214,9 +214,46 @@ hist(usAirlog[,1])
 Placing 1, 2 in parentheses after the `c` (which stands for concatenate) in the `par` function indicates that you want you plots arranged in 1 row and two columns. Note this plotting is done in base R as opposed to using the ggplot functions of Tidyverse. It is helpful to know base R and Tidyverse to be able to read and trouble shoot code with a wide range of collaborators. In ggplot this code would be similar to what the *facet* function does.
 
 Compare histograms for the raw data and the log transformed data for each variable.
+```{r}
+par(mfrow=c(1,2))
+#SO2
+hist(usAir$SO2)
+hist(usAirlog$SO2)
+
+par(mfrow=c(1,2))
+#temp
+hist(usAir$temp)
+hist(usAirlog$temp)
+
+par(mfrow=c(1,2))
+#manu
+hist(usAir$manu)
+hist(usAirlog$manu)
+
+par(mfrow=c(1,2))
+#popul
+hist(usAir$popul)
+hist(usAirlog$popul)
+
+par(mfrow=c(1,2))
+#wind
+hist(usAir$wind)
+hist(usAirlog$wind)
+
+par(mfrow=c(1,2))
+#precip
+hist(usAir$precip)
+hist(usAirlog$precip)
+
+par(mfrow=c(1,2))
+#predays
+hist(usAir$predays)
+hist(usAirlog$predays)
+```
+
 
 **Question 2: Which variable might not need to be log transformed? (5 pts)**
-
+The `wind` and `predays` seem to not need log transformation since they appear to be normal. Temp and precip may also not need log but it seems they are slightly improved. 
 \newline
 
 ## Square root transformation: $$b_{ij}=\sqrt{x_{ij}}$$
@@ -246,7 +283,44 @@ hist(usAir[,1])
 hist(usAirsqrt[,1]) 
 ```
 
-Compare histograms for the raw data and the log transformed data for each variable…
+Compare histograms for the raw data and the square root transformed data for each variable…
+```{r}
+par(mfrow=c(1,2))
+#SO2
+hist(usAir$SO2)
+hist(usAirsqrt$SO2)
+
+par(mfrow=c(1,2))
+#temp
+hist(usAir$temp)
+hist(usAirsqrt$temp)
+
+par(mfrow=c(1,2))
+#manu
+hist(usAir$manu)
+hist(usAirsqrt$manu)
+
+par(mfrow=c(1,2))
+#popul
+hist(usAir$popul)
+hist(usAirsqrt$popul)
+
+par(mfrow=c(1,2))
+#wind
+hist(usAir$wind)
+hist(usAirsqrt$wind)
+
+par(mfrow=c(1,2))
+#precip
+hist(usAir$precip)
+hist(usAirsqrt$precip)
+
+par(mfrow=c(1,2))
+#predays
+hist(usAir$predays)
+hist(usAirsqrt$predays)
+```
+
 
 Remember that square root transformations are best used on count data.
 
@@ -305,6 +379,7 @@ Cv<-Sdev/M*100
 Our rule of thumb for cv is that if **cv\> 50**, data standardization is necessary.
 
 ***Questin 3: Is standardization necessary for the `USairpollution` data? (5 pts)***
+Standardization is necessary for the the `USairpollution` dataset (cv = 129.3).\ 
 
 ## Z- standardization $$b_{ij}$$ = ($$x_{ij}- \bar{x_{j}})/s_{j}$$
 
@@ -324,8 +399,48 @@ hist(scaledData[,1] ,main=colnames(usAir)[1],xlab=" ")
 ```
 
 Compare the raw and standardized histograms for all of the variables.
+```{r}
+par(mfrow=c(1,2))
+#SO2
+hist(usAir$SO2)
+hist(scaledData[,1])
+
+par(mfrow=c(1,2))
+#temp
+hist(usAir$temp)
+hist(scaledData[,2])
+
+par(mfrow=c(1,2))
+#manu
+hist(usAir$manu)
+hist(scaledData[,3])
+
+par(mfrow=c(1,2))
+#popul
+hist(usAir$popul)
+hist(scaledData[,4])
+
+par(mfrow=c(1,2))
+#wind
+hist(usAir$wind)
+hist(scaledData[,5])
+
+par(mfrow=c(1,2))
+#precip
+hist(usAir$precip)
+hist(scaledData[,6])
+
+par(mfrow=c(1,2))
+#predays
+hist(usAir$predays)
+hist(scaledData[,7])
+```
 
 ***Question 4: Are you convinced that the variances are equalized? Just to check, calculate the mean and variance for each of the standardized variables. (10 pts)***
+```{r}
+colMeans(scaledData)
+
+```
 
 **Z standardization is very common in life sciences.**
 
