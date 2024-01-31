@@ -57,12 +57,9 @@ usAir<-USairpollution
 ```
 
 The modified `USairpollution` data set from your working directory is a csv file. Note you will need to modify you working directory if it is different.
-
 ```{r}
 usAir_mod<- read.csv("G:/Shared drives/MultivariateStatistics/Data/LabData/Lab2/usAir_mod.csv", row=1, header=TRUE)
 ```
-
-\newline
 
 # Data screening
 
@@ -82,7 +79,6 @@ describeBy(usAir)
 The standard deviation values for `manu` and `popul` as they are much larger that the mean and median values, indicating some large spread. The range of values for these two also seem pretty extreme so that brings some suspicion. Wind values also seem to be pretty low but also given the context of the cities, Phoenix has the lowest wind value which makes sense since it is generally flat and there are not many tall buildings compared to Chicago with a much higher wind value.\  
 
 Now look at the summary statistics for `usAir_mod`:
-
 ```{r eval=FALSE}
 describeBy(usAir_mod)
 ```
@@ -92,7 +88,6 @@ Look at the max for temperature. It will be easier to look for data errors when 
 ## Missing Data
 
 When you have missing entries in your data sheet, R replaces them with “NA”. You can check if you have any missing variables in *usAir_mod*:
-
 ```{r eval=FALSE}
 describe(usAir_mod)
 ```
@@ -102,13 +97,11 @@ The *describe* function provides some of the same information as *describeBy*, b
 We talked about two methods for dealing with missing values in lecture; **Complete Case and Imputation**. We will look at **complete case and imputation** for now.
 
 **Complete Case** involves the removal of samples (in this case cities) with missing data:
-
 ```{r eval=FALSE}
 usAir_mod [complete.cases(usAir_mod),]
 ```
 
 **Imputation** involves filling in missing values with plausible data. Let’s replace NAs with the mean of the variable.
-
 ```{r}
 #First, let’s calculate the mean of each variable (column) with the NA removed:
 
@@ -131,8 +124,6 @@ Impute<-apply(usAir_mod,2,naFunc)
 
 Check out the new Impute data object and make sure that the NA’s have been replaced.
 
-\newline
-
 We will not go into this advanced function too much. However, know that *apply* allows us to perform a function on all the rows and/or columns in a data frame of matrix. As we spoke about in lecture, there are many types of imputation methods. We can explore further methods for your specific missing data.
 
 # Multivariate Normal Distribution
@@ -140,21 +131,15 @@ We will not go into this advanced function too much. However, know that *apply* 
 Many of the analyses we will do in this course have an assumption of multivariate normality. While there are many tests of multivariate normality, they tend to be overly conservative. If we strictly followed these tests, we may never run a multivariate analysis with ecological or agricultural data. Here we will look at two multivariate tests of normality.
 
 ## Shapiro-Wilks test
-
 Shapiro-Wilks tests if the distribution of the observed data differs from multivariate normal distribution. So, we are looking for p-values \> 0.05.
-
 ```{r}
 mshapiro.test(t(usAir))
-
 ```
 
 ## Mardia test
-
 Mardia’s test looks at multivariate extensions of Skewness and Kurtosis. In both cases, we are looking for p-values \> 0.05 to show that our data do not deviate from the expectations of multivariate normal Skewness and Kurtosis. For the observed data to be considered multivariate normal, p-values from both the Skewness and Kurtosis statistics must be \> 0.05. This function also tests for univariate normality of residuals using the Shapiro-Wilk statistic.
-
 ```{r}
 mvn(usAir, mvnTest = "mardia")
-
 ```
 
 # Data transformation
@@ -205,10 +190,8 @@ You can compare the histograms side by side using the par function followed by h
 
 ```{r}
 par(mfrow=c(1,2))
-
 hist(usAir[,1])  
 hist(usAirlog[,1])  
-
 ```
 
 Placing 1, 2 in parentheses after the `c` (which stands for concatenate) in the `par` function indicates that you want you plots arranged in 1 row and two columns. Note this plotting is done in base R as opposed to using the ggplot functions of Tidyverse. It is helpful to know base R and Tidyverse to be able to read and trouble shoot code with a wide range of collaborators. In ggplot this code would be similar to what the *facet* function does.
@@ -505,7 +488,7 @@ Outliers were detected for the following: `SO2`, `temp`, `manu`, `popul`.\
 
 **we will come back to this...**
 
-# Distance and Dissimilarity - **LEFT OFF HERE**
+# Distance and Dissimilarity
 
 As we know from lecture, multivariate data with *p* variables are visually represented by a collection of points forming a data cloud in *p*-dimensional space. The shape, clumping, and dispersion of the data cloud contains information we seek to describe. Several distance and dissimilarity measures are used to calculate the distance between data points.
 
@@ -526,8 +509,8 @@ scaledData<-scale(usAir)
 Then calculate distance:
 
 ```{r results='hide'}
+#Euclidean distance: common distance & for cont data 
 eucDist<- vegdist(scaledData,"euclidean")
-
 ```
 
 Let’s look at a histogram of distances:
@@ -537,10 +520,11 @@ hist(eucDist)
 ```
 
 **Question 6: What does this frequency distribution tell you about pollution conditions across these 41 cities? (5 pts)**
+The distance between the majority of the pollution values across cities are closer, with a few have much different pollution conditions. \ 
 
 Euclidean Distance can be weird. Let look at the data matrix below:
 
-We want to determine how similar these farms are in theit production of strawberries, peaches, and raspberries.
+We want to determine how similar these farms are in the production of strawberries, peaches, and raspberries.
 
 ```{r}
 Fruit <-rbind(c(1,0,1,1),c(2,1,0,0), c(3,0,4,4))
@@ -555,6 +539,9 @@ eucDist<- vegdist(Fruit[,-1], "euclidean")
 ```
 
 Gives us this distance matrix (R gives you the triangular matrix without the diagonal):
+| |1|2|
+|2|1.73| |
+|3|4.24|5.74|
 
 The distance between farms 1 and 2, which grow none of the same fruits:
 
@@ -572,11 +559,11 @@ Euclidean distance is not a jack-of-all-trades and is not appropriate for all da
 cbDist<- vegdist(scaledData,"manhattan")
 
 #Let’s look at a histogram of distances:
-
 hist(cbDist)
 ```
 
 **Question 7: How does this distribution compare to Euclidean distance? (5 pts)**
+The city blok distribution gives a similar shape to the Euclidean distance, but the scales of the distances differ (city block has a larger range).\ 
 
 ## Bray-Curtis dissimilarity
 
@@ -584,7 +571,6 @@ hist(cbDist)
 brayDist<- vegdist(usAir,"bray")
 
 #Histogram:
-
 hist(brayDist)
 ```
 
@@ -661,4 +647,244 @@ Find the outliers:
 colBray [colBray >threeSD]
 ```
 
+
+
+
+# Working through my dataset
 **Question 8: NOW, RUN THROUGH THE ABOVE EXERCISES WITH YOUR OWN DATA! (55 pts)**
+
+```{r, reading dataset}
+#read in neon-npn phenology dataset with row names appointed to observation IDs
+phe = read.csv("G:/Shared drives/MultivariateStatistics/Data/StudentDataSets/AmadorL_NeonNpn_OpenFLowers_conus.CSV", row=1, header = TRUE)
+
+library(tidyverse, quietly = TRUE)
+#remove extra columns
+phe = phe %>%
+  select(-c("update_datetime", "phenophase_id", "phenophase_description", "kingdom", "common_name", "elevation_in_metersStat", "phenophase_status", "intensity_category_id", "intensity_value", "abundance_value", "elevation_in_meters", "first_yes_julian_date", "numdays_since_prior_no", "last_yes_julian_date", "numdays_until_next_no"))
+```
+Main variables are columns 8, 12, 16, 18 (day_of_year, first_yes_doy, last_yes_doy, mean_first_yes_doy). Each have corresponding years to use. 
+
+## Data screening 
+```{r}
+describeBy(phe)
+describe(phe) #No missing values
+```
+Day of year values seem to be within a reasonable range. No missing values.
+
+## Multivariate Normal Distribution
+All columns must be numerical for `mshapiro.test` and `mvn` function to work, so subsetting in the meantime. Keeping identifier columns, ignore in tests. Look at the normality of variables for the first 5,000 observations
+```{r, Shapiro Wilks test}
+phe.mvn = phe %>%
+  select(c("site_id", "species_id", "individual_id", "day_of_year", "first_yes_doy", "last_yes_doy", "mean_first_yes_doy"))
+
+c = t(phe.mvn[0:5000, 4:7])
+mshapiro.test(c) #specifying rows bc of sample size limit & need to specify column 
+```
+Not normal, p-value < 0.05.
+
+
+```{r, Mardia test}
+mvn(phe.mvn, mvnTest = "mardia")
+```
+None of the variables are normal, p-value < 0.05.
+
+## Transformations 
+### Log transformation on the following: day_of_year, first_yes_doy, last_yes_doy, mean_first_yes_doy
+```{r}
+phe.log = phe.mvn %>%
+  mutate(day_of_year = log(day_of_year), first_yes_doy = log(first_yes_doy), last_yes_doy = log(last_yes_doy), mean_first_yes_doy = log(mean_first_yes_doy))
+```
+
+Plot the raw vs log transformed data
+```{r}
+par(mfrow=c(2,4))
+#day of year (DOY)
+hist(phe.mvn$day_of_year, main = "raw DOY", xlab = " ")
+hist(phe.log$day_of_year, main = "log DOY", xlab = " ")
+
+#first day of year
+hist(phe.mvn$first_yes_doy, main = "raw first DOY", xlab = " ")
+hist(phe.log$first_yes_doy, main = "log first DOY", xlab = " ")
+
+#last day of year
+hist(phe.mvn$last_yes_doy, main = "raw last DOY", xlab = " ")
+hist(phe.log$last_yes_doy, main = "log last DOY", xlab = " ")
+
+#average first day of year
+hist(phe.mvn$mean_first_yes_doy, main = "raw mean first DOY", xlab = " ")
+hist(phe.log$mean_first_yes_doy, main = "log mean first DOY", xlab = " ")
+
+```
+
+### Square root transformation on the following: day_of_year, first_yes_doy, last_yes_doy, mean_first_yes_doy
+```{r}
+phe.sqrt = phe.mvn %>%
+  mutate(day_of_year = sqrt(day_of_year), first_yes_doy = sqrt(first_yes_doy), last_yes_doy = sqrt(last_yes_doy), mean_first_yes_doy = sqrt(mean_first_yes_doy))
+```
+
+Plot the raw vs square root transformed data
+```{r}
+par(mfrow=c(2,4))
+#day of year (DOY)
+hist(phe.mvn$day_of_year, main = "raw DOY", xlab = " ")
+hist(phe.sqrt$day_of_year, main = "sqrt DOY", xlab = " ")
+
+#first day of year
+hist(phe.mvn$first_yes_doy, main = "raw first DOY", xlab = " ")
+hist(phe.sqrt$first_yes_doy, main = "sqrt first DOY", xlab = " ")
+
+#last day of year
+hist(phe.mvn$last_yes_doy, main = "raw last DOY", xlab = " ")
+hist(phe.sqrt$last_yes_doy, main = "sqrt last DOY", xlab = " ")
+
+#average first day of year
+hist(phe.mvn$mean_first_yes_doy, main = "raw mean first DOY", xlab = " ")
+hist(phe.sqrt$mean_first_yes_doy, main = "sqrt mean first DOY", xlab = " ")
+```
+
+The square root transformation worked the best. Not performing arcsine square root transformation because my variables are integer/count data (i.e. days into the year until open flower observed).
+
+
+
+
+
+
+## Data standardisation  
+### Coefficienct of variance
+Checking to see if phenology data set needs standardization by calculating the *coefficient of variation* **(cv)** for column totals. 
+```{r, results='hide'}
+#column sums - only for the four target columns (the first three are identifier info)
+cSums <- colSums(phe.mvn[, 4:7])
+#stadard deviation
+sd <- sd(cSums)
+#mean
+m <- mean(cSums)
+```
+
+```{r}
+Cv<-sd/m*100
+Cv>50
+```
+
+Our rule of thumb for cv is that if **cv\> 50**, data standardization is necessary.
+Standardization is not necessary for the phenology data set (cv = 3.54). If it was necessary then we would scale the data using something like Z-standardization (going to do this anyway to detect outliers).
+
+## Detecting outliers
+Let's detect univariate outliers. We will Z-standardize the variables (day_of_year, first_yes_doy, last_yes_doy, mean_first_yes_doy) and detect any values outside of 3 standard deviations. 
+```{r}
+#scaling individually to keep identifier columns
+phe.scaled = phe.mvn %>%
+  mutate(day_of_year = scale(day_of_year), first_yes_doy = scale(first_yes_doy), last_yes_doy = scale(last_yes_doy), mean_first_yes_doy = scale(mean_first_yes_doy))
+```
+
+Let's take a look at the scaled data
+```{r}
+par(mfrow=c(2,2))
+
+hist(phe.scaled$day_of_year, main = "Day of Year (DOY)", xlab = " ")
+hist(phe.scaled$first_yes_doy, main = "First DOY", xlab = " ")
+hist(phe.scaled$last_yes_doy, main = "Last DOY", xlab = " ")
+hist(phe.scaled$mean_first_yes_doy, main = "Mean first DOY", xlab = " ")
+```
+
+Use the `out` function for detecting outliers called out.
+```{r}
+apply(phe.scaled[,4:7],2,out)
+```
+Outliers were detected for all variables. The most were found in `first_yes_doy` but all had outliers later in the year. There are plants opening their flowers late in the year.
+
+
+
+## Distance & Dissimilarity 
+
+### Euclidean distance
+For continuous data, my data is more discrete but let's take a gander. 
+First Z-standardizing
+```{r results='hide'}
+#scaling individually to keep identifier columns
+phe.scaled = phe.mvn %>%
+  mutate(day_of_year = scale(day_of_year), first_yes_doy = scale(first_yes_doy), last_yes_doy = scale(last_yes_doy), mean_first_yes_doy = scale(mean_first_yes_doy))
+```
+
+Then calculate distance & view histogram of distances:
+```{r results='hide'}
+#Euclidean distance: common distance & for cont data 
+eucDist<- vegdist(phe.scaled[4:7],"euclidean")
+#histogram of distances
+hist(eucDist)
+```
+
+#**interpretation of Euclidean distance graph??**
+
+### City-block (Manhattan) distance
+```{r}
+cbDist<- vegdist(phe.scaled[4:7],"manhattan")
+
+#Let’s look at a histogram of distances:
+hist(cbDist)
+```
+The city blok distribution gives a similar shape to the Euclidean distance, but the scales of the distances differ (city block has a larger range).
+
+### Bray-Curtis dissimilarity
+Let's look at the bray-curtis dissimilarity. In addition, examine deviations of the sample average distances to other samples using **Bray-Curtis** distance.
+```{r}
+brayDist<- vegdist(phe.mvn[4:7],"bray")
+
+#Histogram:
+hist(brayDist)
+```
+
+*-*
+Calculate column means. These column means represent the average dissimilarity of each observation to all other day of year metric. You want to know if any observations are on average more than 3 standard deviation units (z scores). To achieve this, z-transform the averages:
+```{r}
+multOut<-scale(colMeans(as.matrix(brayDist)))
+```
+
+Plot a histogram and look for observations \>3 sd units:
+```{r}
+hist(multOut)
+```
+You can find the observations that are outliers with:
+```{r}
+multOut [multOut >3,]
+```
+
+
+Another possibility is to determine which observation are \> 3 standard deviations from the mean. Using Bray-Curtis distance again:
+
+Calculate column means:
+```{r}
+colBray<-colMeans(as.matrix(brayDist))
+```
+
+Calculate the mean of the column means:
+```{r}
+mBray<-mean(colBray)
+```
+
+Calculate the standard deviation:
+```{r}
+stdBray<- sd(colBray)
+```
+
+… 3 standard deviations
+```{r}
+threeSD<-stdBray * 3 + mBray
+```
+
+plot a histogram and look for observations \>3 sd:
+```{r }
+hist(colBray)
+```
+
+Find the outliers:
+```{r}
+colBray [colBray >threeSD]
+```
+
+
+
+
+
+
+
