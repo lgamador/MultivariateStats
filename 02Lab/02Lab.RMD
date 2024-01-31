@@ -520,7 +520,7 @@ hist(eucDist)
 ```
 
 **Question 6: What does this frequency distribution tell you about pollution conditions across these 41 cities? (5 pts)**
-The distance between the majority of the pollution values across cities are closer, with a few have much different pollution conditions. \ 
+The distance between the majority of the pollution values across cities are close to each other, with a few groups that have much different pollution conditions. \ 
 
 Euclidean Distance can be weird. Let look at the data matrix below:
 
@@ -598,7 +598,6 @@ multOut<-scale(colMeans(as.matrix(brayDist)))
 ```
 
 Plot a histogram and look for observations \>3 sd units:
-
 ```{r}
 hist(multOut)
 ```
@@ -813,8 +812,9 @@ eucDist<- vegdist(phe.scaled[4:7],"euclidean")
 #histogram of distances
 hist(eucDist)
 ```
+The majority of the raw data points are relatively close to each other. 
 
-#**interpretation of Euclidean distance graph??**
+Note: depending on the data & transformation would need to include the transformed data into the dissimilarty/distance metrics -- especially to identify outliers.  
 
 ### City-block (Manhattan) distance
 ```{r}
@@ -834,7 +834,6 @@ brayDist<- vegdist(phe.mvn[4:7],"bray")
 hist(brayDist)
 ```
 
-*-*
 Calculate column means. These column means represent the average dissimilarity of each observation to all other day of year metric. You want to know if any observations are on average more than 3 standard deviation units (z scores). To achieve this, z-transform the averages:
 ```{r}
 multOut<-scale(colMeans(as.matrix(brayDist)))
