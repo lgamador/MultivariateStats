@@ -441,8 +441,6 @@ eigVec<-as.matrix(eig$vectors[,1:2])
 rownames(eigVec) <- rownames(cov(ZusAir))
 ```
 
-
-
 Then simply multiply each eigenvector times the matrix of standardized observation values (ZusAir) and plot!
 
 ```{r fig.height= 7, fig.width= 7}
@@ -455,7 +453,8 @@ biplot(scores,eigVec,xlab="PC 1, 39%", ylab="PC 2, 21%",expand= 4, ylim=c(-6.5,6
 
 
 # My Data set **LEFT OFF HERE**
-## **Question 4: Does your individual dataset (the one used in Lab 2) meet the assumptions of PCA? Is PCA an analysis you could use on your data? (40 pts)**
+## **Question 4: Does your individual dataset (the one used in Lab 2) meet the assumptions of PCA? Is PCA an analysis you could use on your data? (40 pts)** 
+My dataset meets the assumption of multivariate normality, independence, are random and 
 
 ```{r, reading dataset}
 #read in neon-npn phenology dataset with row names appointed to observation IDs
@@ -480,7 +479,7 @@ phe.sqrt = phe.shrt %>%
 
 Plot the variables 
 ```{r}
-par(mfrow=c(2,4))
+par(mfrow=c(2,2))
 hist(phe.sqrt$day_of_year, main = "sqrt DOY", xlab = " ")
 hist(phe.sqrt$first_yes_doy, main = "sqrt first DOY", xlab = " ")
 hist(phe.sqrt$last_yes_doy, main = "sqrt last DOY", xlab = " ")
@@ -495,7 +494,7 @@ Zphe<-scale(phe.sqrt[, 4:7]) #especially important to scale bc in very different
 ### Running the PCA:
 You are going to use the package `princomp` function in the stats package.
 ```{r}
-phe_ca <- princomp(Zphe, cor = F)
+phe_pca <- princomp(Zphe, cor = F)
 ```
 
 cor = F, because you are using the *covariance* matrix instead of the *correlation* matrix.
@@ -509,7 +508,7 @@ summary(phe_pca)
 
 #### Determining number of axes to keep
 **Scree plot**
-You now have **_** PC axes. Which ones give us vital information and which ones can we toss?  
+You now have 4 PC axes. Which ones give us vital information and which ones can we toss?  
 ```{r}
 plot(phe_pca, type="lines")
 ```
@@ -519,6 +518,7 @@ Check the summary of the PCA explore this:
 ```{r}
 summary(phe_pca)
 ```
+It seems that the first axis explains most of the variation
 
 **Significance of factor loadings**
 Another method for determining significance of factor loadings is bootstrapping. (see line 35 for more info)
@@ -546,16 +546,16 @@ set.seed(4) #so we get the same random sample
  
 sigpca2(Zphe, permutations=1000) # Use function with the scaled data as input
 ```
-
+## **WHAT DOES THIS MEAN D:**
 
 ### PCA plots
 Plot out the factor loadings for the first 2 PC axes:
 ```{r fig.height= 7, fig.width= 7}
 plot(phe_pca$loadings, type="n", xlab="PC 1, 39%", ylab="PC 2, 21%", ylim=c(-.8,.8), xlim=c(-.6,.6))
-text(phe_pca$loadings, labels=as.character(colnames(pheAir)), pos=1, cex=1)
+text(phe_pca$loadings, labels=as.character(colnames(Zphe)), pos=1, cex=1)
 ```
 
-## **Question 3: How do you interpret these axes? Come up with a name for each. (20 pts)**
+
  
 
 Let’s now plot the PC score for each sample (city):
@@ -572,7 +572,6 @@ biplot(phe_pca$scores, phe_pca$loading, xlab="PC 1, 39%", ylab="PC 2, 21%", expa
 To replace observation ID with a symbol:
 ```{r fig.height= 7, fig.width= 7}
 biplot(phe_pca$scores, phe_pca$loading, expand= 4, xlabs= rep("*",41), xlab="PC 1, 39%", ylab="PC 2, 21%", ylim=c(-6.5,6), xlim=c(-4,7))
-
 ```
 
 #### Eigen Analysis
