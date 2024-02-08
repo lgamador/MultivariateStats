@@ -22,6 +22,7 @@ Install and load packages
 
 ```{r warning=FALSE, message=FALSE}
 library(MVA)
+library(MVN)
 library(psych)
 library(Hmisc)
 library(vegan)
@@ -183,9 +184,9 @@ hist(usAir$predays, main="raw predays", xlab="")
 ```
 
 ```{r, testing normality}
-mshapiro.test(t(usAir))
+mvn(usAir, mvnTest = "mardia")
 ```
-
+Wind & predays are normal - do not need transformation
 
 ```{r}
 logusAir = log(usAir)
@@ -201,8 +202,10 @@ hist(logusAir$predays, main="log predays", xlab="") # does not need transformati
 ```
 
 ```{r, testing normality}
-mshapiro.test(t(logusAir))
+mvn(logusAir, mvnTest = "mardia")
 ```
+
+Everything normal except precip & predays (does not need transformation anyway), and log not appropriate for popul and manu (count data). Log for precip improves normality than if it were to be left untransformed
 
 ```{r}
 sqrtusAir = sqrt(usAir)
@@ -218,36 +221,38 @@ hist(sqrtusAir$predays, main="sqrt predays", xlab="") # does not need transforma
 ```
 
 ```{r, testing normality}
-mshapiro.test(t(sqrtusAir))
+mvn(sqrtusAir, mvnTest = "mardia")
+```
+
+Sqrt improves the normality of manu and popul and appropriate transformation for the data class. Precip seems to be more normal raw than transformed. 
+
+```{r}
+transusAir = usAir %>%
+  mutate(logSO2 = log(SO2), logtemp = log(temp), sqrtmanu = sqrt(manu), sqrtpop = sqrt(popul)) %>%
+  select(-c("SO2", "temp", "manu", "popul"))
+
+head(transusAir, 4)
+```
+
+```{r, testing normality}
+mvn(transusAir, mvnTest = "mardia")
 ```
 
 ```{r}
 par(mfrow=c(2,4))
 
-hist(logusAir$SO2, main="log SO2", xlab="") 
-hist(logusAir$temp, main="log temp", xlab="") 
-hist(sqrtusAir$manu, main="sqrt manu", xlab="") 
-hist(sqrtusAir$popul, main="sqrt popul", xlab="") 
-hist(usAir$wind, main="raw wind", xlab="")
-hist(usAir$precip, main="raw precip", xlab="")
-hist(usAir$predays, main="raw predays", xlab="")
-```
-
-```{r}
-transusAir = usAir %>%
-  mutate(logSO2 = log(SO2), logtemp = log(temp), logmanu = log(manu), logpop = log(popul)) %>%
-  select(-c("SO2", "temp", "manu", "popul"))
-
-transusAir
-```
-
-```{r, testing normality}
-mshapiro.test(t(transusAir))
+hist(transusAir$logSO2, main="log SO2", xlab="") 
+hist(transusAir$logtemp, main="log temp", xlab="") 
+hist(transusAir$sqrtmanu, main="sqrt manu", xlab="") 
+hist(transusAir$sqrtpop, main="sqrt popul", xlab="") 
+hist(transusAir$wind, main="raw wind", xlab="")
+hist(transusAir$precip, main="raw precip", xlab="")
+hist(transusAir$predays, main="raw predays", xlab="")
 ```
 
 
 ## **What variable did you transform, and what transformation did you use? (15 pts)**
-I log transformed `SO2`, `temp`, `manu`, and `popul`.  The rest were left as is, log and square root transformations exaggerated skewness. 
+I log transformed `SO2` and `temp`, and square root transformed `manu` and `popul`.  The rest were left as is, log and square root transformations exaggerated skewness. 
 
 If you do transform any variables, use the transformed data matrix going forward.
 
@@ -333,7 +338,7 @@ You now have 7 PC axes. Which ones give us vital information and which ones can 
 plot(usAir_pca, type="lines")
 ```
 **_**
-Based on the scree plot, it seems like we can keep the first three since they explain the majoritiy of the variation. 
+Based on the scree plot, it seems like we can keep the first five since they explain the majoritiy of the variation and the variation seems to level off around component 5. 
 
 
 How about the **latent root criterion (i.e., keep components with eigenvalues > 1)** and the **relative percent variance criteria**.  Check the summary of the PCA explore this: 
@@ -344,7 +349,7 @@ summary(usAir_pca)
 
 
 ## **Question 2: How many axes you should keep and why? (20 points)**
-Based on the latent root criterion, we should keep the first three components since after that eigenvalues are < 1 and prove to explain more of the variance. 
+Based on the latent root criterion, we should keep the first three components since after that eigenvalues are < 1. 
 \newline
 
 ## Significance of factor loadings.
@@ -405,7 +410,7 @@ text(usAir_pca$loadings, labels=as.character(colnames(ZusAir)), pos=1, cex=1)
 
 
 ## **Question 3: How do you interpret these axes? Come up with a name for each. (20 pts)**
-The axes indicate how strongly each characteristic (variable vector) influence the variation (principal components).  
+The axes indicate how strongly each characteristic (variable vector) influence the variation (principal components). PC 1 could be deemed the "anthropogenic" axis where the majority of the variation is explained by the population (sqrtpopul), manufacturing enterprises (sqrtmanu) and the $SO_2$ air content (logSO2), which are all direct anthropogenic activities. PC 1 can be deemed the "temperature" axis since only temperature (logtemp) is really dominating that axis. 
 
 **Close the plot window after viewing**
 
@@ -468,150 +473,7 @@ biplot(scores,eigVec,xlab="PC 1, 39%", ylab="PC 2, 21%",expand= 4, ylim=c(-6.5,6
 ```
 
 
-# My Data set **LEFT OFF HERE**
+# My Data set 
 ## **Question 4: Does your individual dataset (the one used in Lab 2) meet the assumptions of PCA? Is PCA an analysis you could use on your data? (40 pts)** 
-My dataset meets the assumption of multivariate normality, independence, are random and 
-
-```{r, reading dataset}
-#read in neon-npn phenology dataset with row names appointed to observation IDs
-phe = read.csv("G:/Shared drives/MultivariateStatistics/Data/StudentDataSets/AmadorL_NeonNpn_OpenFLowers_conus.CSV", row=1, header = TRUE)
-
-#remove extra columns
-phe = phe %>%
-  select(-c("update_datetime", "phenophase_id", "phenophase_description", "kingdom", "common_name", "elevation_in_metersStat", "phenophase_status", "intensity_category_id", "intensity_value", "abundance_value", "elevation_in_meters", "first_yes_julian_date", "numdays_since_prior_no", "last_yes_julian_date", "numdays_until_next_no"))
-```
-
-### Selecting the variables I will be working with 
-```{r}
-phe.shrt = phe %>%
-  select(c("site_id", "species_id", "individual_id", "day_of_year", "first_yes_doy", "last_yes_doy", "mean_first_yes_doy"))
-```
-
-Square root transformation on the following: day_of_year, first_yes_doy, last_yes_doy, mean_first_yes_doy
-```{r}
-phe.sqrt = phe.shrt %>%
-  mutate(day_of_year = sqrt(day_of_year), first_yes_doy = sqrt(first_yes_doy), last_yes_doy = sqrt(last_yes_doy), mean_first_yes_doy = sqrt(mean_first_yes_doy))
-```
-
-Plot the variables 
-```{r}
-par(mfrow=c(2,2))
-hist(phe.sqrt$day_of_year, main = "sqrt DOY", xlab = " ")
-hist(phe.sqrt$first_yes_doy, main = "sqrt first DOY", xlab = " ")
-hist(phe.sqrt$last_yes_doy, main = "sqrt last DOY", xlab = " ")
-hist(phe.sqrt$mean_first_yes_doy, main = "sqrt mean first DOY", xlab = " ")
-```
-
-Next, apply a z-score standardization:
-```{r results='hide'}
-Zphe<-scale(phe.sqrt[, 4:7]) #especially important to scale bc in very different units now 
-```
-
-### Running the PCA:
-You are going to use the package `princomp` function in the stats package.
-```{r}
-phe_pca <- princomp(Zphe, cor = F)
-```
-
-cor = F, because you are using the *covariance* matrix instead of the *correlation* matrix.
-**It should be noted that the covariance matrix of a z-standardized data matrix is equivalent to the correlation matrix of the unscaled data.**
-
-Let’s look at a summary of our PCA:
-```{r}
-summary(phe_pca)
-```
-
-
-#### Determining number of axes to keep
-**Scree plot**
-You now have 4 PC axes. Which ones give us vital information and which ones can we toss?  
-```{r}
-plot(phe_pca, type="lines")
-```
-
-**Latent root criterion (i.e., keep components with eigenvalues > 1)** and the **relative percent variance criteria**.  
-Check the summary of the PCA explore this: 
-```{r}
-summary(phe_pca)
-```
-It seems that the first axis explains most of the variation
-
-**Significance of factor loadings**
-Another method for determining significance of factor loadings is bootstrapping. (see line 35 for more info)
-```{r}
-sigpca2<-function (x, permutations=1000, ...)
-{
-  pcnull <- princomp(x, ...)
-  res <- pcnull$loadings
-  out <- matrix(0, nrow=nrow(res), ncol=ncol(res))
-  N <- nrow(x)
-  for (i in 1:permutations) { #resample from x, princomp() it and compare PC info to orig PC, do this 1k times
-    pc <- princomp(x[sample(N, replace=TRUE), ], ...) #randomly sample (w/ replacment) from the observed data pool (x), with the same number of rows (N) and no change to the columns
-    pred <- predict(pc, newdata = x)
-    r <-  cor(pcnull$scores, pred)
-    k <- apply(abs(r), 2, which.max)
-    reve <- sign(diag(r[k,]))
-    sol <- pc$loadings[ ,k]
-    sol <- sweep(sol, 2, reve, "*")
-    out <- out + ifelse(res > 0, sol <=  0, sol >= 0)
-  }
-  out/permutations
-}
-
-set.seed(4) #so we get the same random sample 
- 
-sigpca2(Zphe, permutations=1000) # Use function with the scaled data as input
-```
-## **WHAT DOES THIS MEAN D:**
-
-### PCA plots
-Plot out the factor loadings for the first 2 PC axes:
-```{r fig.height= 7, fig.width= 7}
-plot(phe_pca$loadings, type="n", xlab="PC 1, 39%", ylab="PC 2, 21%", ylim=c(-.8,.8), xlim=c(-.6,.6))
-text(phe_pca$loadings, labels=as.character(colnames(Zphe)), pos=1, cex=1)
-```
-
-
- 
-
-Let’s now plot the PC score for each sample (city):
-```{r fig.height= 7, fig.width= 7 }
-plot(phe_pca$scores, type="n",xlab="PC 1, 39%", ylab="PC 2, 21%", ylim=c(-2.5,4), xlim=c(-4,8))
-text(phe_pca$scores, labels=as.character(rownames(Zphe)), pos=1, cex=1)
-```
-
-And now all together in a `biplot`:
-```{r fig.height= 7, fig.width= 7}
-biplot(phe_pca$scores, phe_pca$loading, xlab="PC 1, 39%", ylab="PC 2, 21%", expand= 4, ylim=c(-6.5,6), xlim=c(-4,7.5))
-```
-
-To replace observation ID with a symbol:
-```{r fig.height= 7, fig.width= 7}
-biplot(phe_pca$scores, phe_pca$loading, expand= 4, xlabs= rep("*",41), xlab="PC 1, 39%", ylab="PC 2, 21%", ylim=c(-6.5,6), xlim=c(-4,7))
-```
-
-#### Eigen Analysis
-You can also just simply use the Eigen analysis function, `eigen` and calculate your own scores by hand. Note that I am showing this for illustration for those of you who want to have a deeper understanding of the method.
-```{r}
-eig<-eigen(cov(Zphe))
-```
-
-Extract the first two eigenvectors (because that is what we are interested in plotting):
-```{r}
-eigVec<-as.matrix(eig$vectors[,1:2])
-rownames(eigVec) <- rownames(cov(Zphe))
-```
-
-Then simply multiply each eigenvector times the matrix of standardized observation values (Zphe) and plot!
-```{r fig.height= 7, fig.width= 7}
-scores<-t(rbind(eigVec[,1]%*%t(Zphe),eigVec[,2]%*%t(Zphe)))#hand calculated scores
-# and plot
-biplot(scores, eigVec, xlab="PC 1, 39%", ylab="PC 2, 21%", expand= 4, ylim=c(-6.5,6), xlim=c(-4,7.5))
-```
-
-
-
-
-
-
+My data set does not meet the assumptions of multivariate normality (even after transformations), and so a PCA is not appropriate for this data set.  
 
