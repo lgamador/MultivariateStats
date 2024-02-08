@@ -201,7 +201,8 @@ hist(logusAir$precip, main="log precip", xlab="") # does not need transformation
 hist(logusAir$predays, main="log predays", xlab="") # does not need transformation
 ```
 
-```{r, testing normality}
+```{r}
+#testing normality
 mvn(logusAir, mvnTest = "mardia")
 ```
 
@@ -220,7 +221,8 @@ hist(sqrtusAir$precip, main="sqrt precip", xlab="") # does not need transformati
 hist(sqrtusAir$predays, main="sqrt predays", xlab="") # does not need transformation
 ```
 
-```{r, testing normality}
+```{r}
+#testing normality
 mvn(sqrtusAir, mvnTest = "mardia")
 ```
 
@@ -234,7 +236,8 @@ transusAir = usAir %>%
 head(transusAir, 4)
 ```
 
-```{r, testing normality}
+```{r}
+#testing normality
 mvn(transusAir, mvnTest = "mardia")
 ```
 
