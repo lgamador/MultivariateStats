@@ -715,6 +715,12 @@ hist(phe.log$mean_first_yes_doy, main = "log mean first DOY", xlab = " ")
 
 ```
 
+```{r, Mardia test}
+mvn(phe.log, mvnTest = "mardia")
+c = t(phe.log[0:5000, 4:7])
+mshapiro.test(c) #specifying rows bc of sample size limit & need to specify column 
+```
+
 ### Square root transformation on the following: day_of_year, first_yes_doy, last_yes_doy, mean_first_yes_doy
 ```{r}
 phe.sqrt = phe.mvn %>%
@@ -739,6 +745,12 @@ hist(phe.sqrt$last_yes_doy, main = "sqrt last DOY", xlab = " ")
 #average first day of year
 hist(phe.mvn$mean_first_yes_doy, main = "raw mean first DOY", xlab = " ")
 hist(phe.sqrt$mean_first_yes_doy, main = "sqrt mean first DOY", xlab = " ")
+```
+
+```{r, Mardia test}
+c = t(phe.sqrt[0:5000, 4:7])
+mshapiro.test(c) #specifying rows bc of sample size limit & need to specify column 
+#mvn(phe.sqrt, mvnTest = "mardia")
 ```
 
 The square root transformation worked the best. Not performing arcsine square root transformation because my variables are integer/count data (i.e. days into the year until open flower observed).
