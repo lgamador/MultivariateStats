@@ -182,6 +182,11 @@ hist(usAir$precip, main="raw precip", xlab="")
 hist(usAir$predays, main="raw predays", xlab="")
 ```
 
+```{r, testing normality}
+mshapiro.test(t(usAir))
+```
+
+
 ```{r}
 logusAir = log(usAir)
 
@@ -195,17 +200,25 @@ hist(logusAir$precip, main="log precip", xlab="") # does not need transformation
 hist(logusAir$predays, main="log predays", xlab="") # does not need transformation
 ```
 
+```{r, testing normality}
+mshapiro.test(t(logusAir))
+```
+
 ```{r}
 sqrtusAir = sqrt(usAir)
 
 par(mfrow=c(2, 4))
 hist(sqrtusAir$SO2, main="sqrt SO2", xlab="") #log better
 hist(sqrtusAir$temp, main="sqrt temp", xlab="") #log better
-hist(sqrtusAir$manu, main="sqrt manu", xlab="") #log better
-hist(sqrtusAir$popul, main="sqrt popul", xlab="") #log better
-hist(sqrtusAir$wind, main="sqrt wind", xlab="") # does not need transformation  
+hist(sqrtusAir$manu, main="sqrt manu", xlab="") #log better but not appropriate for count
+hist(sqrtusAir$popul, main="sqrt popul", xlab="") #log better but not appropriate for count
+hist(sqrtusAir$wind, main="sqrt wind", xlab="") # does not need transformation - period
 hist(sqrtusAir$precip, main="sqrt precip", xlab="") # does not need transformation - not that much diff from raw & log is worse
 hist(sqrtusAir$predays, main="sqrt predays", xlab="") # does not need transformation
+```
+
+```{r, testing normality}
+mshapiro.test(t(sqrtusAir))
 ```
 
 ```{r}
@@ -213,8 +226,8 @@ par(mfrow=c(2,4))
 
 hist(logusAir$SO2, main="log SO2", xlab="") 
 hist(logusAir$temp, main="log temp", xlab="") 
-hist(logusAir$manu, main="log manu", xlab="") 
-hist(logusAir$popul, main="log popul", xlab="") 
+hist(sqrtusAir$manu, main="sqrt manu", xlab="") 
+hist(sqrtusAir$popul, main="sqrt popul", xlab="") 
 hist(usAir$wind, main="raw wind", xlab="")
 hist(usAir$precip, main="raw precip", xlab="")
 hist(usAir$predays, main="raw predays", xlab="")
@@ -228,6 +241,9 @@ transusAir = usAir %>%
 transusAir
 ```
 
+```{r, testing normality}
+mshapiro.test(t(transusAir))
+```
 
 
 ## **What variable did you transform, and what transformation did you use? (15 pts)**
@@ -389,7 +405,7 @@ text(usAir_pca$loadings, labels=as.character(colnames(ZusAir)), pos=1, cex=1)
 
 
 ## **Question 3: How do you interpret these axes? Come up with a name for each. (20 pts)**
-The axes indicate how strongly each characteristic (variable vector) influence the variation (principal components). The x axis may be named as "Covariance between Component 1 and the original data" and the same with the y-axis. 
+The axes indicate how strongly each characteristic (variable vector) influence the variation (principal components).  
 
 **Close the plot window after viewing**
 
